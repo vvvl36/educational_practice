@@ -11,6 +11,9 @@ using namespace std;
 vector<string> breakdown_into_words(string name_file, string& original_string);
 vector<int> counting_words(vector<string> words);
 void writing_to_file_result(string name_file, vector<string> words);
+int sorting_and_sorttime(vector<string>& words);
+void writing_to_file_analysis(string name_file, string original_string, int time, int size_words, vector<int> amount_words);
+void sort(vector <string>& words);
 
 int main()
 {
@@ -40,6 +43,12 @@ int main()
 
     //подсчет количества слов на каждую букву
     vector<int> amount_words = counting_words(words);
+
+    //сортировка слов по алфавиту и вычисление времени сортировки
+    int time = sorting_and_sorttime(words);
+
+    //запись в файл analysis
+    writing_to_file_analysis(name_file, source_string, time, words.size(), amount_words);
 
     //запись в файл result
     writing_to_file_result(name_file, words);
@@ -141,10 +150,68 @@ void writing_to_file_result(string name_file, vector <string> words)
     string analysis_str = "result_" + name_file + ".txt";
     file_result.open(analysis_str, ios::out); // открываем файл на запись в него, если файла нет, то он создастся
 
-        //вывод слов
+    //вывод слов
     for (int i = 0; i < words.size(); i++)
     {
         file_result << words[i] << endl;
     }
     file_result.close();
+}
+
+int sorting_and_sorttime(vector<string>& words)
+{
+    string tmp;
+
+    int start_time = clock();
+    sort(words);
+    int end_time = clock();
+
+    return end_time - start_time;
+}
+
+void writing_to_file_analysis(string name_file, string source_string, int time, int size_words, vector<int> amount_words)
+{
+    fstream file_analysis;
+
+    string analysis_str = "analysis_" + name_file + ".txt";
+    file_analysis.open(analysis_str, ios::out); // открываем файл на запись в него, если файла нет, то он создастся
+
+    file_analysis
+        << "Исходный текст: " << endl
+        << source_string << endl
+        << "Параметры выбранного варианта (3): " << endl
+        << "1. Кириллица " << endl
+        << "2. По алфавиту " << endl
+        << "3. По возрастанию " << endl
+        << "4. Учитывать числа " << endl
+        << "5. Сортировка вставками " << endl
+        << "Количество слов: " << size_words << endl
+        << "Время сортировки: " << static_cast<double>(time) / 1000 << " с" << endl //static_cast это приведение типа к другому типу (в данном случае инт к дабл)
+        << "Количество символов: " << source_string.length() << endl
+        << "Количество слов на каждую букву алфавита: " << endl;
+
+    string kirillica_hi = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"; //алфавит русский
+
+    //вывод количества слов на каждую букву
+    for (int i = 0; i < amount_words.size(); i++)
+    {
+        file_analysis << kirillica_hi[i] << ": " << amount_words[i] << endl; //выводим букву и количество слов на эту букву
+    }
+    file_analysis.close(); //закрываем файл
+}
+
+void sort(vector <string>& words)
+{
+    string buff;
+    int i, j;
+    for (i = 1; i < words.size(); i++)
+    {
+        buff = words[i]; // запомним обрабатываемый элемент
+        // и начнем перемещение элементов слева от него
+        // пока запомненный не окажется меньше чем перемещаемый
+        for (j = i - 1; j >= 0 && words[j] > buff; j--)
+            words[j + 1] = words[j];
+
+        words[j + 1] = buff; // и поставим запомненный на его новое место	
+    }
 }
