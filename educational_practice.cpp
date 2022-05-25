@@ -147,8 +147,8 @@ void writing_to_file_result(string name_file, vector <string> words)
 {
     fstream file_result;
 
-    string analysis_str = "result_" + name_file + ".txt";
-    file_result.open(analysis_str, ios::out); // открываем файл на запись в него, если файла нет, то он создастся
+    string result_str = "result_" + name_file + ".txt";
+    file_result.open(result_str, ios::out); // открываем файл на запись в него, если файла нет, то он создастся
 
     //вывод слов
     for (int i = 0; i < words.size(); i++)
@@ -209,7 +209,7 @@ void sort(vector <string>& words)
         buff = words[i]; // запомним обрабатываемый элемент
         // и начнем перемещение элементов слева от него
         // пока запомненный не окажется меньше чем перемещаемый
-        for (j = i - 1; j >= 0 && words[j] > buff; j--)
+        for (j = i - 1; j >= 0 && words[j] >= buff; j--)
             words[j + 1] = words[j];
 
         words[j + 1] = buff; // и поставим запомненный на его новое место	
