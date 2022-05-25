@@ -10,6 +10,7 @@ using namespace std;
 // прототипы
 vector<string> breakdown_into_words(string name_file, string& original_string);
 vector<int> counting_words(vector<string> words);
+void writing_to_file_result(string name_file, vector<string> words);
 
 int main()
 {
@@ -39,6 +40,9 @@ int main()
 
     //подсчет количества слов на каждую букву
     vector<int> amount_words = counting_words(words);
+
+    //запись в файл result
+    writing_to_file_result(name_file, words);
 
     return 0;
 }
@@ -128,4 +132,19 @@ vector<int> counting_words(vector<string> words)
         }
     }
     return amount_words;
+}
+
+void writing_to_file_result(string name_file, vector <string> words)
+{
+    fstream file_result;
+
+    string analysis_str = "result_" + name_file + ".txt";
+    file_result.open(analysis_str, ios::out); // открываем файл на запись в него, если файла нет, то он создастся
+
+        //вывод слов
+    for (int i = 0; i < words.size(); i++)
+    {
+        file_result << words[i] << endl;
+    }
+    file_result.close();
 }
