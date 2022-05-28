@@ -21,19 +21,7 @@ int main()
     SetConsoleCP(1251); // поддержка кириллицы в консоли (ввод)
     SetConsoleOutputCP(1251); // поддержка кириллицы в консоли (ввод)
 
-    cout
-        << "Файлы с текстами: " << endl
-        << "1. Текст " << endl
-        << "2. Tекст" << endl
-        << "2. Tекст" << endl
-        << "2. Tекст" << endl
-        << "2. Tекст" << endl
-        << "2. Tекст" << endl
-        << "2. Tекст" << endl
-        << "2. Tекст" << endl
-        << "2. Tекст" << endl
-        << "2. Текст" << endl
-        << "Введите номер текста: ";
+    cout << "Введите номер текста: ";
 
     string name_file, source_string; //переменные имени файла и исходной строки
     cin >> name_file;
@@ -95,7 +83,7 @@ vector<string> breakdown_into_words(string name_file, string& source_string)
 
         {
             s += symbol; //собираем слово 
-            if ((symbol_next < 'а' || symbol_next > 'я') && symbol_next != 'ё') //разделитель - все кроме маленьких букв
+            if ((symbol_next < 'а' || symbol_next > 'я') && symbol_next != 'ё' && symbol_next != '-') //разделитель - все кроме маленьких букв
             {
                 words.push_back(s); //добавляем в массив строку
                 s = ""; //обнуляем строку
@@ -118,6 +106,10 @@ vector<string> breakdown_into_words(string name_file, string& source_string)
                 {
                     s += symbol; //собираем слово 
                 }
+                else if (symbol == '-' && (symbol_next >= 'А' && symbol_next <= 'Я' || symbol_next >= 'а' && symbol_next <= 'я' || symbol_next == 'Ё' || symbol_next == 'ё') && s != "")
+                {
+                    s += symbol;
+                }
             }
         }
     }
@@ -128,15 +120,16 @@ vector<int> counting_words(vector<string> words)
 {
     vector<int> amount_words(33); //вектор длиной 33, заполнен нулями. Каждый элемент - это количество слов на данную букву
 
-    string kirillica_hi = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"; //алфавит русский
-    string kirillica_lo = "абвгдеёжзийклмнопрстуфхцчшщъэьэюя"; //алфавит русский
+    string cyrillic_hi = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"; //алфавит русский
+    string cyrillic_lo = "абвгдеёжзийклмнопрстуфхцчшщъэьэюя"; //алфавит русский
+
     for (int i = 0; i < words.size(); i++)
     {
-        for (int j = 0; j < kirillica_hi.size(); j++) //проходим по всему массиву количества
+        for (int j = 0; j < cyrillic_hi.size(); j++) //проходим по всему массиву количества
         {
-            if (kirillica_hi[j] == words[i][0]) //если первая буква равна какой-то букве из верхнего регистра, то увеличиваем
+            if (cyrillic_hi[j] == words[i][0]) //если первая буква равна какой-то букве из верхнего регистра, то увеличиваем
                 amount_words[j]++;
-            if (kirillica_lo[j] == words[i][0]) //если первая буква равна какой-то букве из нижнего регистра, то увеличиваем
+            if (cyrillic_lo[j] == words[i][0]) //если первая буква равна какой-то букве из нижнего регистра, то увеличиваем
                 amount_words[j]++;
         }
     }
@@ -178,24 +171,18 @@ void writing_to_file_analysis(string name_file, string source_string, int time, 
 
     file_analysis
         << "Исходный текст: " << endl
-        << source_string << endl
-        << "Параметры выбранного варианта (3): " << endl
-        << "1. Кириллица " << endl
-        << "2. По алфавиту " << endl
-        << "3. По возрастанию " << endl
-        << "4. Учитывать числа " << endl
-        << "5. Сортировка вставками " << endl
+        << "<<" << name_file << ">>" << endl
+        << "Параметры выбранного варианта (12): кириллица, по алфавиту, по возрастанию, игнорировать числа, сортировка слиянием" << endl
         << "Количество слов: " << size_words << endl
-        << "Время сортировки: " << static_cast<double>(time) / 1000 << " с" << endl //static_cast это приведение типа к другому типу (в данном случае инт к дабл)
-        << "Количество символов: " << source_string.length() << endl
-        << "Количество слов на каждую букву алфавита: " << endl;
+        << "Время сортировки: " << static_cast<double>(time) / 1000 << " с" << endl
+        << "Статистика: " << endl;
 
-    string kirillica_hi = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"; //алфавит русский
+    string cyrillic_lo = "абвгдеёжзийклмнопрстуфхцчшщъэьэюя"; //алфавит русский
 
     //вывод количества слов на каждую букву
     for (int i = 0; i < amount_words.size(); i++)
     {
-        file_analysis << kirillica_hi[i] << ": " << amount_words[i] << endl; //выводим букву и количество слов на эту букву
+        file_analysis << cyrillic_lo[i] << ": " << amount_words[i] << endl; //выводим букву и количество слов на эту букву
     }
     file_analysis.close(); //закрываем файл
 }
