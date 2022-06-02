@@ -122,7 +122,7 @@ vector<int> counting_words(vector<string> words)
     vector<int> amount_words(33); //вектор длиной 33, заполнен нулями. Каждый элемент - это количество слов на данную букву
 
     string cyrillic_hi = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-    string cyrillic_lo = "абвгдеёжзийклмнопрстуфхцчшщъэьэюя";
+    string cyrillic_lo = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
 
     for (int i = 0; i < words.size(); i++)
     {
@@ -172,18 +172,27 @@ void writing_to_file_analysis(string name_file, string source_string, int time, 
 
     file_analysis
         << "Исходный текст: " << endl
-        << "<<" << name_file << ">>" << endl
-        << "Параметры выбранного варианта (12): кириллица, по алфавиту, по возрастанию, игнорировать числа, сортировка слиянием" << endl
+        << "<<" << source_string << ">>" << endl
+        << "Параметры выбранного варианта (3): кириллица, по алфавиту, по возрастанию, учитывать числа, сортировка вставками" << endl
         << "Количество слов: " << size_words << endl
         << "Время сортировки: " << static_cast<double>(time) / 1000 << " с" << endl
         << "Статистика: " << endl;
 
-    string cyrillic_lo = "абвгдеёжзийклмнопрстуфхцчшщъэьэюя";
+    cout
+        << "Исходный текст: " << endl
+        << "<<" << source_string << ">>" << endl
+        << "Параметры выбранного варианта (3): кириллица, по алфавиту, по возрастанию, учитывать числа, сортировка вставками" << endl
+        << "Количество слов: " << size_words << endl
+        << "Время сортировки: " << static_cast<double>(time) / 1000 << " с" << endl
+        << "Статистика: " << endl;
+
+    string cyrillic_lo = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
 
     //вывод количества слов на каждую букву
     for (int i = 0; i < amount_words.size(); i++)
     {
         file_analysis << cyrillic_lo[i] << ": " << amount_words[i] << endl; //выводим букву и количество слов на эту букву
+        cout << cyrillic_lo[i] << ": " << amount_words[i] << endl; //выводим букву и количество слов на эту букву
     }
     file_analysis.close(); //закрываем файл
 }
@@ -193,7 +202,7 @@ void sort(vector <string>& words)
     string buff;
     int i, j, number_buff, number_j;
     string cyrillic_hi = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-    string cyrillic_lo = "абвгдеёжзийклмнопрстуфхцчшщъэьэюя";
+    string cyrillic_lo = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
     string numbers_string = "0123456789";
 
     vector <string> numbers_array; //массив чисел
